@@ -9,4 +9,4 @@
 | Lab     | Status  | Link   |
 | :------: | :-----: | :-----: |
 | IW1     | ✅      | [lab01](../../tree/lab01) |
-| IW2     | ❎      | [lab02](../../tree/lab02) |
+| IW2     | ✅      | [lab02](../../tree/lab02) |
