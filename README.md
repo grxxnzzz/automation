@@ -16,7 +16,7 @@ All results are saved as `.json` files in the `data/` directory, while possible 
 ```shell
 pip install requests
 ```
-> For Docker & Setup instructions (or readme) look at [Lab02 Prep](.../lab02/lab02prep_readme.md)
+> For Docker & Setup instructions (or readme) look at [Lab02 Prep](https://github.com/grxxnzzz/automation/blob/lab02/lab02prep_readme.md)
 
 ## How to run the project
 1. **Clone the repository**
