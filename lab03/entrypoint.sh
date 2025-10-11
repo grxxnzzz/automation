@@ -1,25 +1,18 @@
 #!/bin/sh
+set -e
 
-create_log_file() {
-    echo "Creating log file..."
-    touch /var/log/cron.log
-    chmod 666 /var/log/cron.log
-    echo "Log file created at /var/log/cron.log"
-}
-
-monitor_logs() {
-    echo "=== Monitoring cron logs ==="
-    tail -f /var/log/cron.log &
-}
-
-run_cron() {
-    echo "=== Starting cron daemon ==="
-    exec cron -f
-}
-
-# Make sure environment variables are visible to cron
+echo "=== Saving environment variables for cron ==="
 env > /etc/environment
 
-create_log_file
-monitor_logs
-run_cron
+echo "=== Creating cron log file ==="
+touch /var/log/cron.log
+chmod 666 /var/log/cron.log
+
+echo "=== Installing cron jobs ==="
+crontab /app/cronjob
+
+echo "=== Starting cron service ==="
+cron
+
+echo "=== Tailing log file ==="
+tail -f /var/log/cron.log
