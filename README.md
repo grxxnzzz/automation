@@ -1,4 +1,4 @@
-# IW02: Creating a Python Script to Interact with an API
+# IW03: Task Scheduler (cron)
 
 The script `currency_exchange_rate.py` requests the exchange rate between two currencies on a specified date from a local support service (which is launched via Docker Compose), saves the response in a JSON file in the root folder of the project in the `data/` directory, and logs errors in `error.log`.
 
@@ -76,8 +76,5 @@ The `currency_exchange_rate.py` script is a command-line client that interacts w
     - All errors are written both to the console and to `error.log` in the root directory, so failed requests can be tracked.
 
 # Summary
-This project implements a currency exchange service with a backend running in PHP inside a Docker container. The service provides historical exchange rates for several currencies and uses MDL as the base currency. It validates requests with an API key stored in a `.env` file and responds with JSON data containing either the requested exchange rate or an error message.
 
-The Python script serves as a client for the service. It accepts command-line arguments for the source currency, target currency, date, and API key, sends a request to the PHP API, handles any errors returned by the service, and saves successful responses as JSON files in a local `data` directory. The script also logs errors to a file named `error.log` in the project root.
-
-Overall, the project demonstrates interaction between a local Python client and a PHP API running in Docker. The client automates requests for exchange rates across specified dates, manages responses, and maintains a record of both results and errors.
+!!!to be inserted!!!

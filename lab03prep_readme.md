@@ -1,6 +1,6 @@
-# Support project for lab02
+# Support project for lab03
 
-It is a support project for `lab02` and represents a Currency Exchange Rate service. The default currency is `MDL` (Moldovan Leu) and the service provides exchange rates for `USD`, `EUR`, `RON`, `RUS` and `UAH`.
+It is a support project for `lab03` and represents a Currency Exchange Rate service. The default currency is `MDL` (Moldovan Leu) and the service provides exchange rates for `USD`, `EUR`, `RON`, `RUS` and `UAH`.
 
 Project contains the following files and directories:
 
