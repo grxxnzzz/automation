@@ -1,0 +1,17 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y openssh-server sudo apache2 php libapache2-mod-php php-mbstring php-xml php-curl php-zip git && \
+    mkdir /var/run/sshd && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Создаём пользователя ansible
+RUN useradd -m -s /bin/bash ansible && echo "ansible:ansible" | chpasswd && usermod -aG sudo ansible
+
+# Устанавливаем скрипт entrypoint
+COPY docker-entrypoint-testserver.sh /usr/local/bin/docker-entrypoint-testserver.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint-testserver.sh
+
+EXPOSE 22 80
+
+CMD ["/usr/local/bin/docker-entrypoint-testserver.sh"]

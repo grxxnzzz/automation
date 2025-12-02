@@ -1,0 +1,23 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    python3 python3-pip python3-venv ssh-client openssh-client git sudo curl vim \
+    apt-transport-https ca-certificates gnupg lsb-release netcat-openbsd && \
+    pip3 install --no-cache-dir ansible==8.0.0 && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Создаём пользователя ansible
+RUN useradd -m -s /bin/bash ansible && \
+    echo "ansible ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ansible && \
+    chmod 0440 /etc/sudoers.d/ansible
+
+# Устанавливаем скрипт entrypoint
+COPY docker-entrypoint-ansible.sh /usr/local/bin/docker-entrypoint-ansible.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint-ansible.sh
+
+USER ansible
+WORKDIR /home/ansible
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint-ansible.sh"]

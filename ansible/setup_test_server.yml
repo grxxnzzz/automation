@@ -1,0 +1,84 @@
+---
+- name: Configure test server for PHP project
+  hosts: testserver
+  become: true
+  vars:
+    project_repo: "https://github.com/slendchat/ticket-system-demo.git"
+    project_dest: "/var/www/project"
+    apache_conf_path: "/etc/apache2/sites-available/project.conf"
+
+  tasks:
+    - name: Ensure apt cache is up to date
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install required packages
+      apt:
+        name:
+          - apache2
+          - php
+          - libapache2-mod-php
+          - php-cli
+          - php-xml
+          - php-mbstring
+          - php-curl
+          - git
+        state: present
+
+    - name: Ensure apache modules enabled
+      command: a2enmod rewrite
+      notify: restart apache
+      args:
+        creates: /etc/apache2/mods-enabled/rewrite.load
+
+    - name: Create project destination
+      file:
+        path: "{{ project_dest }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0755'
+
+    - name: Clone project repository
+      git:
+        repo: "{{ project_repo }}"
+        dest: "{{ project_dest }}"
+        version: HEAD
+        force: yes
+        update: yes
+      become_user: www-data
+
+    - name: Setup apache virtual host
+      copy:
+        dest: "{{ apache_conf_path }}"
+        content: |
+          <VirtualHost *:80>
+              ServerAdmin webmaster@localhost
+              DocumentRoot {{ project_dest }}/public
+              <Directory {{ project_dest }}/public>
+                  AllowOverride All
+                  Require all granted
+              </Directory>
+              ErrorLog ${APACHE_LOG_DIR}/project_error.log
+              CustomLog ${APACHE_LOG_DIR}/project_access.log combined
+          </VirtualHost>
+      notify: restart apache
+
+    - name: Enable site
+      command: a2ensite project.conf
+      args:
+        creates: /etc/apache2/sites-enabled/project.conf
+      notify: restart apache
+
+    - name: Disable default site
+      command: a2dissite 000-default.conf
+      args:
+        removes: /etc/apache2/sites-enabled/000-default.conf
+      notify: restart apache
+
+  handlers:
+    - name: restart apache
+      service:
+        name: apache2
+        state: restarted

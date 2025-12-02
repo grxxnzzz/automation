@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  jenkins-controller:
+    image: jenkins/jenkins:lts
+    container_name: jenkins-controller
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - ./secrets:/tmp/secrets:ro
+    environment:
+      - JENKINS_AGENT_SSH_PUBKEY=${JENKINS_AGENT_SSH_PUBKEY}
+    networks:
+      - jenkins-network
+
+  ssh-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.ssh_agent
+    container_name: ssh-agent
+    volumes:
+      - jenkins_agent_volume:/home/jenkins/agent
+    depends_on:
+      - jenkins-controller
+    networks:
+      - jenkins-network
+
+  ansible-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.ansible_agent
+    container_name: ansible-agent
+    privileged: false
+    volumes:
+      - ./secrets:/tmp/secrets:ro
+      - ./ansible:/home/ansible/ansible:ro
+    environment:
+      - ANSIBLE_HOST_KEY_CHECKING=False
+    networks:
+      - jenkins-network
+
+  test-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.test_server
+    container_name: test-server
+    ports:
+      - "2222:22"
+      - "8081:80"
+    volumes:
+      - ./secrets:/tmp/secrets:ro
+    networks:
+      - jenkins-network
+
+volumes:
+  jenkins_home:
+  jenkins_agent_volume:
+
+networks:
+  jenkins-network:
+    driver: bridge
