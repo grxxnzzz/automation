@@ -11,4 +11,5 @@
 | IW1     | ✅      | [lab01](../../tree/lab01) |
 | IW2     | ✅      | [lab02](../../tree/lab02) |
 | IW3     | ✅      | [lab03](../../tree/lab03) |
-| IW4     | ✅      | [lab04](../../tree/lab03) |
+| IW4     | ✅      | [lab04](../../tree/lab04) |
+| IW5     | ✅      | [lab05](../../tree/lab05) |
